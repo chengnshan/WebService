@@ -1,0 +1,49 @@
+group 'com.cxp'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'war'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    maven { url 'file:///F:/Eclipse Maven/repository/' }  //使用file协议，本地仓库
+    maven { url 'file:///G:/devlopment/repository/' }
+    maven {
+        url 'http://maven.aliyun.com/nexus/content/groups/public/'
+    }
+    mavenCentral()
+}
+
+ext{
+    springversion = '5.0.5.RELEASE'
+    httpclient = '4.3'
+}
+
+dependencies {
+    compile("org.apache.cxf:cxf-rt-frontend-jaxws:3.2.0")
+    compile("org.apache.cxf:cxf-rt-transports-http-jetty:3.2.0")
+    compile("org.apache.cxf:cxf-rt-ws-security:3.2.0")
+    compile("org.springframework:spring-webmvc:${springversion}")
+    compile("org.springframework:spring-tx:${springversion}")
+    compile("com.fasterxml.jackson.core:jackson-databind:2.9.5")
+	compile group: 'com.alibaba', name: 'fastjson', version: '1.2.47'
+	compile("org.apache.httpcomponents:httpclient:${httpclient}")
+	compile("org.apache.httpcomponents:httpcore:${httpclient}")
+}
+
+def createWebDir = {
+    path ->
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+}
+
+task makeDir {
+    def paths = ['src/main/java', 'src/main/resources', 'src/main/webapp'];
+    doLast {
+        paths.forEach(createWebDir);
+    }
+}
